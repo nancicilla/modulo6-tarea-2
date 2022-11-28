@@ -1,0 +1,47 @@
+version: '3'
+services:
+  web-django:
+    image: 192.168.100.44:8082/deploy_module/app2:2.0 
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+
+  web-vue:
+    hostname: web-vue
+    build: .
+    environment:
+      process.env.VUE_APP_RUTA_API: "http://0.0.0.0:5000"
+      
+    links:
+      - "mydb:json-server"  
+    command: npm run serve
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mydb
+    networks:
+      conexion_networks:
+        aliases:
+          - conexion1_host
+          
+         
+  mydb:
+    hostname: mydb
+    build: . 
+    command: Set-ExecutionPolicy -Scope CurrentUser unrestricted
+    command: json-server -H 0.0.0.0 -p 5000 --watch database/db.json
+    ports:
+      - "5000:5000"
+    networks:
+     conexion_networks:
+       aliases:
+        - conexion2_host
+     
+networks:
+   conexion_networks:
+     name: conexion_net
+     driver: bridge
+     ipam:
+       driver: default
+        
+   
