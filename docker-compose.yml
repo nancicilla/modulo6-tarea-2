@@ -10,7 +10,8 @@ services:
     hostname: web-vue
     build: .
     environment:
-      process.env.VUE_APP_RUTA_API: "http://0.0.0.0:5000"
+      VUE_APP_RUTA_API: "http://0.0.0.0:5000"
+      VUE_APP_MODE: "dev"
       
     links:
       - "mydb:json-server"  
